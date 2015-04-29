@@ -4,13 +4,11 @@
     	window.PingPong = {};
   	}
   	
-	var Ball = PingPong.Ball = function (context, leftPaddle, rightPaddle) {
+	var Ball = PingPong.Ball = function (context) {
 		this.context = context;
 		this.position = [this.context.canvas.width / 2, this.context.canvas.height / 2]
 		this.radius = 20;
 		this.direction = [2, 2];
-		this.leftPaddle = leftPaddle;
-		this.rightPaddle = rightPaddle;
 	};
 
 	Ball.prototype.render = function () {
@@ -23,8 +21,6 @@
 	Ball.prototype.move = function () {
 		if (this.onSideWall()) this.direction[0] = -this.direction[0];
 		if (this.onTopBottomWall()) this.direction[1] = -this.direction[1];
-		if (this.onLeftPaddle()) this.direction[0] = -this.direction[0];
-		if (this.onRightPaddle()) this.direction[0] = -this.direction[0];
 		this.position[0] += this.direction[0];
 		this.position[1] += this.direction[1];
 	};
@@ -32,22 +28,6 @@
 	Ball.prototype.startPosition = function () {
 		this.position = [this.context.canvas.width / 2, this.context.canvas.height / 2];
 	}
-
-	Ball.prototype.onLeftPaddle = function () {
-		var onSide = (this.position[0] - this.radius) < (this.leftPaddle.position[0] + this.leftPaddle.width) ;
-		var onHeight = this.position[1] > this.leftPaddle.position[1] &&
-					   this.position[1] < (this.leftPaddle.position[1] + this.leftPaddle.height);
-
-		return onSide && onHeight;
-	};
-
-	Ball.prototype.onRightPaddle = function () {
-		var onSide = (this.position[0] + this.radius) > this.rightPaddle.position[0];
-		var onHeight = this.position[1] > this.rightPaddle.position[1] &&
-					   this.position[1] < (this.rightPaddle.position[1] + this.rightPaddle.height);
-
-		return onSide && onHeight;
-	};
 
 	Ball.prototype.onSideWall = function () {
 		return (this.position[0] > this.context.canvas.width - this.radius) || (this.position[0] < this.radius);
